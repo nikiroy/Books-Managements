@@ -1,5 +1,5 @@
 const JWT =require('jsonwebtoken')
-const userModel =require("..models/userModel")
+const userModel =require("../models/userModel")
 
 const authentication = async function(req,res,next){
    try{

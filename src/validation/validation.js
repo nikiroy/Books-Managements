@@ -1,7 +1,8 @@
 const {isValidObjectId} = require("mongoose")
 
 const validName=function(name){
-    const nameRegex=/^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z])$/
+    const nameRegex=/^[ a-z ]+$/i
+
     return nameRegex.test(name)
 }
 
@@ -43,12 +44,14 @@ const  isValidObjectIds =function(id){
 }
 
 const isValidISBN=function(ISBN){
-   
+     const regexISBN =(/^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$/g)
+     return regexISBN.test(ISBN)   
 }
 
 
 const isValidDate=function(date){
-    
+    const regexDate =(/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/)
+    return regexDate.test(date)
 }
 
 module.exports={validName,validTitle,isValid,validPhone,validEmail,isValidPassword,isValidPincode,

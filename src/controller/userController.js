@@ -1,6 +1,6 @@
 //--------------------------------Importing models-------------------------------------//
 const userModel=require('../models/userModel')
-const {validName,validTitle,isValid,validEmail,validPhone,isValidPassword,isValidPincode}=require('../validator/validation')
+const {validName,validTitle,isValid,validEmail,validPhone,isValidPassword,isValidPincode}=require('../validation/validation')
 const JWT = require('jsonwebtoken')
 
 
@@ -72,11 +72,11 @@ const loginUser = async function (req, res) {
 
         let payload =
         {
-            userId: userData['_id'],
-            emailId: userData.email
+            userId: userData['_id'].toString()
+            
 
         }
-        let token = JWT.sign({ payload }, "from-group-13",{expiresIn:60 * 60})
+        let token = JWT.sign({ payload }, "from-group-13")
         res.setHeader("x-api-key", token)
 
         let obj = { userId: userData['_id'], token: token }
