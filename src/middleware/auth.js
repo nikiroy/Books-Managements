@@ -1,5 +1,9 @@
 const JWT =require('jsonwebtoken')
+const { isObjectId } = require('mongoose')
 const userModel =require("../models/userModel")
+const bookModel =require("../models/bookModel")
+const {isValidObjectIds} =require("../validation/validation")
+
 
 const authentication = async function(req,res,next){
    try{
@@ -22,5 +26,33 @@ catch (error){
     res.status(500).send({status:"error",error:error.message})
 }
 }
+const authorisation =async function(req,res,next){
+try{
+     let bookId =req.params.bookId
+     if(bookId){
+        if(!isValidObjectIds(bookId)){return res.status(400).send({status:false,message:"UserId is not valid"})}
+        const matchBookId =await bookModel.findOne({_id:bookId,isDeleted:false})
+        if(!matchBookId){return res.status(404).send({status:false,message:"Book id from params is not match or is already deleted"})}
+        if(matchBookId['userId'].toString()!==req.token.payload.userId){
+            return res.status(403).send({status:false,message:"Unauthorised user!"})
+        }
+        return next()
 
-module.exports={authentication}
+     }
+     let data =req.body
+     let{userId}=data
+     if (Object.keys(data).length == 0) return res.status(400).send({ status: false, message: "No data found from body" })
+     if(!isValidObjectIds(userId)){return res.status(400).send({status:false,message:"enter a valid user id"})}
+     const matchUserId =await userModel.findOne({_id:userId,isDeleted:false})
+     if(!matchUserId){return res.status(400).send({status:false,message:"this userId is not present in databse"})}
+     if(matchUserId['_id'].toString()!==req.token.payload.userId){
+        return res.status(403).send({status:false,message:"Unauthorized user"})
+     }
+     next()
+}
+catch(error){
+    res.status(500).send({status:true,message:error.message})
+}
+}
+
+module.exports={authentication,authorisation}
