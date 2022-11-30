@@ -1,7 +1,7 @@
 const bookModel = require('../models/bookModel')
 const userModel = require('../models/userModel')
 const reviewModel =require("../models/reviewModel")
-const ObjectId = require('mongoose').Types.ObjectId
+
 //------------------------create book data----------------------//
 
 const { validName, isValid, isValidObjectIds, isValidISBN, isValidDate } = require('../validation/validation')
@@ -85,23 +85,26 @@ const getBookData = async function (req, res) {
 }
 
 //----------------------------get book by Id--------------------------------//
-const getBookbyId = async function (req, res) { 
+
+const getBookbyId = async function (req, res) {
     try {
         let bookId = req.params.bookId;
-        if(!isValidObjectIds(bookId)){
-            return res.status(400).send({ status: false, messsge: "enter right params" })
+        if (!isValidObjectIds(bookId)) 
+            return res.status(400).send({ status: false, messsge: "Invalid Book Id" })
+
+        const Book = await bookModel.findOne({ _id: bookId }, { isDeleted: false }).select({isDeleted:1, ISBN: 0, deletedAt: 0, __v: 0 })
+
+        if (!Book) {
+            return res.status(404).send({ status: false, message: "Book  not Found" })
         }
-         let count=await reviewModel.findOne({ bookId: bookId,isDeleted:false }).select({deleteAt:0,ISBN:0,_v:0})
-        const Book =await bookModel.findOne({ _id: bookId },{isDeleted:false}).select({deletedAt:0,ISBN:0,_v:0});
-    
-         if (!Book) {
-             return res.status(404).send({ status: false, message: "Book  not Find" })
-         }
-        
-        let reviews=await reviewModel.find({ bookId: bookId,isDeleted:false }).select({updatedAt:0,createdAt:0,isDeleted:0})
-        let bookReview = JSON.parse(JSON.stringify(Book))
-          bookReview.reviewsData = [...reviews]
-        return res.status(200).send({ status: true,message:'Bookslist', data:bookReview })
+
+        let reviewsData = await reviewModel.find({ bookId: bookId, isDeleted: false }).select({
+            _id: 1, bookId: 1, reviewedBy: 1, reviewedAt: 1, rating: 1, review: 1
+        })
+
+        const books = Book.toObject()
+        books['reviewsData'] = [...reviewsData]
+        return res.status(200).send({ status: true, message: 'Books list', data: books })
     }
     catch (err) {
         console.log(err)
@@ -117,7 +120,7 @@ const updateBookById=async function(req,res){
         if(!isValidObjectIds(bookId)) return res.status(400).send({status:false, message:"Invalid Book Id"})
 
         const findBook=await bookModel.findById(bookId)
-        if(!findBook || findBook.isDeleted==true) return res.status(404).send({status:false, message:"Book Not found"})
+        if(!findBook || findBook.isDeleted==true) return res.status(404).send({status:false, message:"Book Not found or data is deleted"})
 
         if(Object.keys(data).length==0) return res.status(400).send({status:false, message:"No data given for updation"})
 

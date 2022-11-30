@@ -76,7 +76,7 @@ const loginUser = async function (req, res) {
             
 
         }
-        let token = JWT.sign({ payload }, "from-group-13")
+        let token = JWT.sign({ payload }, "from-group-13",{expiresIn :'24h'})  //expires in 24 hrs
         res.setHeader("x-api-key", token)
 
         let obj = { userId: userData['_id'], token: token }

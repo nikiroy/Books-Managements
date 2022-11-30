@@ -54,5 +54,11 @@ const isValidDate=function(date){
     return regexDate.test(date)
 }
 
+const isValidRating=function(rating){
+    if(rating<1 || rating>5) 
+    return false
+    return true
+}
+
 module.exports={validName,validTitle,isValid,validPhone,validEmail,isValidPassword,isValidPincode,
     isValidObjectIds,isValidISBN,isValidDate}
