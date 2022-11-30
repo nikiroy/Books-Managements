@@ -61,4 +61,4 @@ const isValidRating=function(rating){
 }
 
 module.exports={validName,validTitle,isValid,validPhone,validEmail,isValidPassword,isValidPincode,
-    isValidObjectIds,isValidISBN,isValidDate}
+    isValidObjectIds,isValidISBN,isValidDate,isValidRating}
