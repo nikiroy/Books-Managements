@@ -13,7 +13,7 @@ const createReview = async function (req, res) {
         let matchBookId = await bookModel.findOne({ _id: bookId, isDeleted: false })
         if (!matchBookId) { return res.status(404).send({ status: false, message: "Book not found" }) }
 
-        if (Object.keys(data) == 0) return res.status(400).send({ status: false, message: "No data given for review creation" })
+        if (Object.keys(data).length == 0) return res.status(400).send({ status: false, message: "No data given for review creation" })
 
         if (reviewedBy) {
             if (!isValid(reviewedBy)) return res.status(400).send({ status: false, message: "Reviewed by can't be empty" })
@@ -106,7 +106,7 @@ const deleteReviewByParam = async function (req, res) {
 
         let book = await bookModel.findById(bookId);
         if (!book || book.isDeleted == true) {
-            return res.status(404).send({ status: false, message: "Book not found" });
+            return res.status(404).send({ status: false, message: "Book not found or book is already deleted" });
         }
         let review = await reviewModel.findById(reviewId);
         if (!review || review.isDeleted == true) {
