@@ -87,7 +87,7 @@ const updateReview = async function (req, res) {
 
         const book = findBook.toObject()
         book['reviewsData'] = updatedReview
-        return res.status(400).send({ status: true, message: 'Success', data: book })
+        return res.status(200).send({ status: true, message: 'Success', data: book })
     }
     catch (err) {
         return res.status(500).send({ status: false, message: err.message })
@@ -124,7 +124,5 @@ const deleteReviewByParam = async function (req, res) {
         res.status(500).send({ status: false, error: error.message })
     }
 }
-
-
 
 module.exports = { createReview, updateReview, deleteReviewByParam }

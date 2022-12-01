@@ -19,9 +19,10 @@ router.put("/books/:bookId",middleware.authentication,middleware.authorisation,b
 
 router.delete("/books/:bookId",middleware.authentication,middleware.authorisation,bookController.deleteBookById)
 
+router.post("/books/:bookId/review", reviewController.createReview)
 router.put('/books/:bookId/review/:reviewId',reviewController.updateReview)
 
-router.post("/books/:bookId/review", reviewController.createReview)
+
 router.delete("/books/:bookId/review/:reviewId", reviewController.deleteReviewByParam)
 
 router.all('/*',function(req,res){
