@@ -60,7 +60,8 @@ const getBookData = async function (req, res) {
         const { userId, category, subcategory } = req.query
         if (!userId && !category && !subcategory) {
             const getAllBooks = await bookModel.find({ isDeleted: false })
-            return res.status(200).send({ status: true, message: "success", data: getAllBooks })
+            const sortBook = getAllBooks.sort((a, b) => a.title.localeCompare(b.title))
+            return res.status(200).send({ status: true, message: "success", data: sortBook })
         }
         if (userId) {
             if (!isValidObjectIds(userId)) {
