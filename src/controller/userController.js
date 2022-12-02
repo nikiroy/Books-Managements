@@ -68,7 +68,7 @@ const loginUser = async function (req, res) {
         if (!password) { return res.status(400).send({ status: false, msg: "Password is required" }) }
 
         let userData = await userModel.findOne({ email: email, password: password })
-        if (!userData) { return res.status(401).send({ status: false, message: "invalid credentials! pls check it " }) }
+        if (!userData) { return res.status(400).send({ status: false, message: "invalid credentials! pls check it " }) }
 
         let payload =
         {
@@ -78,8 +78,13 @@ const loginUser = async function (req, res) {
         }
         let token = JWT.sign({ payload }, "from-group-13",{expiresIn :'24h'})  //expires in 24 hrs
         res.setHeader("x-api-key", token)
+        let decodedToken=JWT.verify(token,"from-group-13")
+        let iat=decodedToken.iat
+        let exp=decodedToken.exp
 
-        let obj = { userId: userData['_id'], token: token }
+        
+
+        let obj = {token: token, userId: userData['_id'],  iat:iat , exp:exp}
         res.status(200).send({ status: true, message: "token generated successfully", data: obj })
     }
         
