@@ -62,10 +62,10 @@ const loginUser = async function (req, res) {
         let email =req.body.email;
         let password =req.body.password
     
-        if (Object.keys(req.body).length == 0) { return res.status(400).send({ status: false, msg: "empty req" }) }
+        if (Object.keys(req.body).length == 0) { return res.status(400).send({ status: false, message: "body is empty" }) }
 
-        if (!email) { return res.status(400).send({ status: false, msg: "Email is required" }) }
-        if (!password) { return res.status(400).send({ status: false, msg: "Password is required" }) }
+        if (!email) { return res.status(400).send({ status: false, message: "Email is required" }) }
+        if (!password) { return res.status(400).send({ status: false, message: "Password is required" }) }
 
         let userData = await userModel.findOne({ email: email, password: password })
         if (!userData) { return res.status(400).send({ status: false, message: "invalid credentials! pls check it " }) }
@@ -89,7 +89,7 @@ const loginUser = async function (req, res) {
     }
         
 catch (error) {
-            res.status(500).send({ status: 'error', error: error.message })
+            res.status(500).send({ status: 'error', message: error.message })
         }
 
     
