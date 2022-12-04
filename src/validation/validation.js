@@ -26,10 +26,10 @@ const validEmail=function(email){
     return emailRegex.test(email)
 }
 const isValidPassword=function(password){
-    password = password.trim()
-   const passRegex= /^(?=.\d)(?=.[a-z])(?=.[A-Z])(?=.[^a-zA-Z0-9])(?!.*\s).{8,15}$/
-   return passRegex.test(password)
-} 
+     password = password.trim()
+    const passRegex= /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,15}$/
+    return passRegex.test(password)
+}
 
 const isValidPincode=function(pincode){
     const pincoderegex= /^[1-9]{1}[0-9]{2}\s{0,1}[0-9]{3}$/
