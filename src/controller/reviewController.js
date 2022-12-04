@@ -121,7 +121,7 @@ const deleteReviewByParam = async function (req, res) {
         res.status(200).send({ status: true, message: "Review deleted sucessfully" })
     }
     catch (error) {
-        res.status(500).send({ status: false, error: error.message })
+        res.status(500).send({ status: false, message: error.message })
     }
 }
 
