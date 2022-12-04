@@ -133,7 +133,7 @@ const updateBookById=async function(req,res){
             if(!isValid(excerpt)) return res.status(400).send({status:false, message:"Excerpt can't be empty"})
         }
         if(ISBN){
-            if(!isValid(ISBN) || !isValidISBN(ISBN)) return res.status(400).send({status:false,message:"Invalid ISBN"})
+                                                                                                                                                                                                                        if(!isValid(ISBN) || !isValidISBN(ISBN)) return res.status(400).send({status:false,message:"Invalid ISBN"})
             const checkISBN=await bookModel.findOne({ISBN})
             if(checkISBN) return res.status(400).send({status:false, message:"ISBN is already registered"})
         }
@@ -160,12 +160,12 @@ const deleteBookById = async function (req, res) {
             return res.status(200).send({ status: true, message: "Book deleted successfully" })
         }
         else {
-            return res.status(404).send({ status: false, message: "Book already Deleted" })
+            return res.status(404).send({ status: false, message: "Book already Deleted or not found" })
         }
 
     }
     catch (err) {
-        res.status(500).send({ status: false, error: err.message })
+       return res.status(500).send({ status: false, message: err.message })
     }
 }
 

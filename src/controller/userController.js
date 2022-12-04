@@ -35,7 +35,7 @@ const createUser=async function(req,res){
 
     if(!password) return res.status(400).send({status:false, message:"Password is mandatory"})
     if(!isValid(password)) return res.status(400).send({status:false, message:"Password can't be empty"})
-    if(!isValidPassword(password)) return res.status(400).send({status:false, message:"Password should be between 8 to 15 characters"})
+    if(!isValidPassword(password)) return res.status(400).send({status:false, message:"Password should be between 8 to 15 characters and should contain atleast one uppercase & lowercase letter,a number and a special character"})
 
     if(address){
         if(typeof address!=="object") return res.status(400).send({status:false, message:"Address is in wrong format"})
@@ -72,7 +72,7 @@ const loginUser = async function (req, res) {
 
         let payload =
         {
-            userId: userData['_id'].toString()
+            userId: userData['_id'].toString()  
             
 
         }
