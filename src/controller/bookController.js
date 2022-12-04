@@ -39,7 +39,7 @@ const createBook = async function (req, res) {
         if (!isValidDate(releasedAt)) return res.status(400).send({ status: false, message: "releasedAt should be in (YYYY-MM-DD) format" })
 
         const checkBook1 = await bookModel.findOne({ title: title })
-        if (checkBook1) return res.status(400).send({ status: false, message: "Title already exists" })
+        if (checkBook1) return res.status(400).send({ status: false, message: "Title should be unique" })
 
         const checkBook2 = await bookModel.findOne({ ISBN: ISBN })
         if (checkBook2) return res.status(400).send({ status: false, message: "ISBN already exists" })
@@ -59,7 +59,8 @@ const getBookData = async function (req, res) {
     try {
         const { userId, category, subcategory } = req.query
         if (!userId && !category && !subcategory) {
-            const getAllBooks = await bookModel.find({ isDeleted: false })
+            const getAllBooks = await bookModel.find({ isDeleted: false }).select({ title: 1, excerpt: 1, userId: 1, category: 1, reviews: 1, releasedAt: 1 })
+     
             const sortBook = getAllBooks.sort((a, b) => a.title.localeCompare(b.title))
             return res.status(200).send({ status: true, message: "success", data: sortBook })
         }
@@ -68,8 +69,8 @@ const getBookData = async function (req, res) {
                 return res.status(400).send({ status: false, message: "Enter Valid User Id" })
             }
         }
-        const book = await bookModel.find({ $or: [{ userId: userId }, { category: category }, { subcategory: subcategory }], isDeleted: false }).select({ _id: 1, title: 1, excerpt: 1, userId: 1, category: 1, reviews: 1, releasedAt: 1 })
-
+        const book = await bookModel.find({ $or: [{ userId: userId }, { category: category }, { subcategory: subcategory }], isDeleted: false }).select({ title: 1, excerpt: 1, userId: 1, category: 1, reviews: 1, releasedAt: 1 })
+        console.log(book)
         if (book.length == 0) {
             return res.status(400).send({ status: false, message: 'Books not found' })
         }
