@@ -40,9 +40,13 @@ const createUser=async function(req,res){
     if(address){
         if(typeof address!=="object") return res.status(400).send({status:false, message:"Address is in wrong format"})
         if(Object.keys(address)==0) return res.status(400).send({status:false, message:"No Address given"})
-        if(address.street && !isValid(address.street)) return res.status(400).send({status:false,message:"Street is in wrong format"})
-        if(address.city && !isValid(address.city)) return res.status(400).send({status:false, message:"City is in wrong format"})
-        if(address.pincode && !isValid(address.pincode)) return res.status(400).send({status:false, message: "Pincode is in wrong format"})
+
+        if(address.street || address.street=="")
+        if( !isValid(address.street)) return res.status(400).send({status:false,message:"Street is in wrong format"})
+        if(address.city || address.city=="")
+        if( !isValid(address.city)) return res.status(400).send({status:false, message:"City is in wrong format"})
+        if(address.pincode || address.pincode=="")
+        if( !isValid(address.pincode)) return res.status(400).send({status:false, message: "Pincode is in wrong format"})
         if(address.pincode && !isValidPincode(address.pincode)) return res.status(400).send({status:false, message: "Invalid Pincode"})
     }
 

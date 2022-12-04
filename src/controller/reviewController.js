@@ -15,18 +15,18 @@ const createReview = async function (req, res) {
 
         if (Object.keys(data).length == 0) return res.status(400).send({ status: false, message: "No data given for review creation" })
 
-        if (reviewedBy) {
+        if (reviewedBy || reviewedBy=="") {
             if (!isValid(reviewedBy)) return res.status(400).send({ status: false, message: "Reviewed by can't be empty" })
             if (!validName(reviewedBy)) return res.status(400).send({ status: false, message: "Reviwed by can only take alphabets" })
         }
-        if (review) {
-            if (!isValid(review)) return res.status(400).send({ status: false, message: "Review can't be empty" })
-        }
-
+        
         if (!rating) return res.status(400).send({ status: false, message: "Rating is mandatory" })
-        if (typeof rating !== 'number') return res.status(400).send({ status: false, message: "Rating is in wrong format" })
+        if (typeof rating !== 'number') return res.status(400).send({ status: false, message: "Rating should be a number" })
         if (!isValidRating(rating)) return res.status(400).send({ status: false, message: "Rating should be between range(1 to 5)" })
 
+        if (review || review=="") {
+            if (!isValid(review)) return res.status(400).send({ status: false, message: "Review can't be empty" })
+        }
         data.reviewedAt = Date.now()
         data.bookId = bookId
 
@@ -47,7 +47,7 @@ const createReview = async function (req, res) {
         return res.status(201).send({ status: true, message: 'Success', data: updateBookData })
     }
     catch (error) {
-        res.status(500).send({ status: false, message: error.message })
+        return res.status(500).send({ status: false, message: error.message })
     }
 }
 
@@ -64,14 +64,14 @@ const updateReview = async function (req, res) {
 
         if (Object.keys(req.body).length == 0) return res.status(400).send({ status: false, message: "No data given for updation" })
 
-        if (review) {
+        if (review || review=="") {
             if (!isValid(review)) return res.status(400).send({ status: false, message: "Review can't be empty" })
         }
-        if (rating) {
+        if (rating || rating=="") {
             if (typeof rating !== 'number') return res.status(400).send({ status: false, message: "Rating is in wrong format" })
             if (!isValidRating(rating)) return res.status(400).send({ status: false, message: "Rating can be from 1 to 5" })
         }
-        if (reviewedBy) {
+        if (reviewedBy || reviewedBy=="") {
             if (!isValid(reviewedBy)) return res.status(400).send({ status: false, message: "Reviewed By can't be empty" })
             if (!validName(reviewedBy)) return res.status(400).send({ status: false, message: "Reviewed By can only take alphabets" })
         }
@@ -118,10 +118,10 @@ const deleteReviewByParam = async function (req, res) {
         let updateBook = await bookModel.findOneAndUpdate({ _id: bookId }, { $inc: { reviews: -1 } })
 
         let deletedReview = await reviewModel.findOneAndUpdate({ _id: reviewId }, { $set: { isDeleted: true} });
-        res.status(200).send({ status: true, message: "Review deleted sucessfully" })
+        return res.status(200).send({ status: true, message: "Review deleted sucessfully" })
     }
     catch (error) {
-        res.status(500).send({ status: false, message: error.message })
+        return res.status(500).send({ status: false, message: error.message })
     }
 }
 

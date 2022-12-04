@@ -125,21 +125,27 @@ const updateBookById = async function (req, res) {
 
         if (Object.keys(data).length == 0) return res.status(400).send({ status: false, message: "No data given for updation" })
 
-        if (title) {
+        if (title || title=="") {
+            
             if (!isValid(title)) return res.status(400).send({ status: false, message: "Title is in wrong format" })
             const checkTitle = await bookModel.findOne({ title })
+            if(findBook.title==title) return res.status(400).send({status:false, message:"Updation should be different.It is same as the previous title"})
             if (checkTitle) return res.status(400).send({ status: false, message: "Title of book is already used" })
+
         }
-        if (excerpt) {
+        if (excerpt || excerpt=="") {
             if (!isValid(excerpt)) return res.status(400).send({ status: false, message: "Excerpt can't be empty" })
+            if(findBook.excerpt==excerpt) return res.status(400).send({status:false, message:"Updation should be different.It is same as the previous excerpt"})
         }
-        if (ISBN) {
+        if (ISBN || ISBN=="") {
             if (!isValid(ISBN) || !isValidISBN(ISBN)) return res.status(400).send({ status: false, message: "Invalid ISBN" })
             const checkISBN = await bookModel.findOne({ ISBN })
+            if(findBook.ISBN==ISBN) return res.status(400).send({status:false, message:"Updation should be different.It is same as the previous ISBN"})
             if (checkISBN) return res.status(400).send({ status: false, message: "ISBN is already registered" })
         }
-        if (releasedAt) {
+        if (releasedAt || releasedAt=="") {
             if (!isValid(releasedAt) || !isValidDate(releasedAt)) return res.status(400).send({ status: false, message: "releasedAt is in wrong format" })
+            if(findBook.releasedAt==releasedAt) return res.status(400).send({status:false, message:"Updation should be different.It is same as the previous release date"})
         }
         const updatedBook = await bookModel.findOneAndUpdate({ _id: bookId }, { $set: { title, excerpt, releasedAt, ISBN } }, { new: true })
         return res.status(200).send({ status: true, message: "Success", data: updatedBook })
