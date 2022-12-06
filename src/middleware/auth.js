@@ -44,6 +44,7 @@ const authorisation = async function (req, res, next) {
         }
         let data = req.body
         let { userId } = data
+        if (!userId) return res.status(400).send({ status: false, message: "User Id is mandatory" })
         if (Object.keys(data).length == 0) return res.status(400).send({ status: false, message: "No data found from body" })
         if (!isValidObjectIds(userId)) { return res.status(400).send({ status: false, message: "enter a valid user id" }) }
         const matchUserId = await userModel.findOne({ _id: userId, isDeleted: false })

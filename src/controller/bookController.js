@@ -18,7 +18,6 @@ const createBook = async function (req, res) {
         if (!excerpt) return res.status(400).send({ status: false, message: "Excerpt is mandatory" })
         if (!isValid(excerpt)) return res.status(400).send({ status: false, message: "Excerpt can't be empty" })
 
-        if (!userId) return res.status(400).send({ status: false, message: "User Id is mandatory" })
         if (!isValid(userId)) return res.status(400).send({ status: false, message: "User Id can't be empty" })
         if (!isValidObjectIds(userId)) return res.status(400).send({ status: false, message: "Invalid UserId" })
         if (!ISBN) return res.status(400).send({ status: false, message: "ISBN is mandatory" })
