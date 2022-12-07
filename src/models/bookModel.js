@@ -2,6 +2,12 @@ const mongoose = require("mongoose");
 const ObjectId = mongoose.Schema.Types.ObjectId
 
 const bookSchema = new mongoose.Schema({
+    bookCover:{
+        type: String,
+        required: true,
+        trim: true, 
+
+    },
     title: { 
         type: String, 
         required: true,

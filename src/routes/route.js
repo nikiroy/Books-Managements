@@ -4,6 +4,7 @@ const userController=require('../controller/userController')
 const bookController=require('../controller/bookController')
 const reviewController=require('../controller/reviewController')
 const middleware =require("../middleware/auth")
+const awsFile = require("../aws/aws.js")
 
 router.post('/register', userController.createUser)
 
@@ -24,6 +25,7 @@ router.put('/books/:bookId/review/:reviewId',reviewController.updateReview)
 
 
 router.delete("/books/:bookId/review/:reviewId", reviewController.deleteReviewByParam)
+router.post('/write-file-aws',awsFile.awsFunction)
 
 router.all('/*',function(req,res){
     res.status(400).send({message:"invalid http request"})
